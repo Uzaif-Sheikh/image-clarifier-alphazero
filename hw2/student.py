@@ -51,10 +51,24 @@ def transform(mode):
 class Network(nn.Module):
     def __init__(self):
         super().__init__()
+        self.con1 = nn.Conv2d(3,52,5,padding=2)
+        self.con2 = nn.Conv2d(52,84,5,padding=2)
+        self.max = nn.MaxPool2d(2,2)
+        self.linear1 = nn.Linear(84*16*16,1024)
+        self.linear2 = nn.Linear(1024,564)
+        self.output = nn.Linear(564,14)
+        self.dropout = nn.Dropout(p=0.5)
         
     def forward(self, t):
-        pass
-
+        t = self.max(F.relu(self.con1(t)))
+        t = self.max(F.relu(self.con2(t)))
+        t = t.view(t.shape[0],-1)
+        t = F.relu(self.linear1(t))
+        t = self.dropout(t)
+        t = F.relu(self.linear2(t))
+        t = self.output(t)
+        #t = F.softmax(t,dim=1)
+        return t
 
 class loss(nn.Module):
     """
@@ -66,7 +80,10 @@ class loss(nn.Module):
         super(loss, self).__init__()
 
     def forward(self, output, target):
-        pass
+        lossfunc = nn.CrossEntropyLoss()
+        loss = lossfunc(output,target)
+        return loss
+
 
 
 net = Network()
@@ -77,5 +94,5 @@ lossFunc = loss()
 dataset = "./data"
 train_val_split = 0.8
 batch_size = 256
-epochs = 3
+epochs = 10
 optimiser = optim.Adam(net.parameters(), lr=0.001)
