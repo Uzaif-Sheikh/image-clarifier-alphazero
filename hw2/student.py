@@ -112,5 +112,5 @@ lossFunc = loss()
 dataset = "./data"
 train_val_split = 0.8
 batch_size = 256
-epochs = 10
+epochs = 30
 optimiser = optim.Adam(net.parameters(), lr=0.001)
