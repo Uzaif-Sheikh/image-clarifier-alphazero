@@ -69,7 +69,7 @@ class Network(nn.Module):
         self.linear3 = nn.Linear(764,254)
         self.linear_batch2 = nn.BatchNorm1d(254)
         self.output = nn.Linear(254,14)
-        self.dropout1 = nn.Dropout(p=0.2)
+        self.dropout1 = nn.Dropout(p=0.3)
         self.dropout = nn.Dropout(p=0.5)
         
     def forward(self, t):
@@ -77,7 +77,7 @@ class Network(nn.Module):
         t = self.dropout1(t)
         t = self.batch(t)
         t = F.relu(self.con2(t))
-        #t = self.batch2(t)
+        t = self.batch2(t)
         t = self.max(F.relu(self.con3(t)))
         t = self.batch3(t)
         t = self.dropout1(t)
@@ -89,12 +89,8 @@ class Network(nn.Module):
         t = t.view(t.shape[0],-1)
         t = self.dropout1(t)
         t = F.relu(self.linear1(t))
-        #t = self.linear_batch1(t)
         t = self.dropout(t)
-        #t = F.relu(self.linear2(t))
-        #t = self.dropout(t)
         t = F.relu(self.linear3(t))
-        #t = self.linear_batch2(t)
         t = F.dropout(t)
         t = self.output(t)
         t = F.log_softmax(t,dim=1)
@@ -124,5 +120,5 @@ lossFunc = loss()
 dataset = "./data"
 train_val_split = 0.8
 batch_size = 256
-epochs = 20
+epochs = 50
 optimiser = optim.Adam(net.parameters(), lr=0.001)
