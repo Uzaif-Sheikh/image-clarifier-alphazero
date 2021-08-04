@@ -55,27 +55,40 @@ class Network(nn.Module):
         self.con2 = nn.Conv2d(52,96,3,padding=1)
         self.con3 = nn.Conv2d(96,124,3,padding=1)
         self.con4 = nn.Conv2d(124,175,3,padding =1)
+        self.con5 = nn.Conv2d(175, 250, 3, padding = 1)
         self.batch = nn.BatchNorm2d(52) 
         self.batch2 = nn.BatchNorm2d(96)
         self.batch1 = nn.BatchNorm2d(175) 
         self.batch3 = nn.BatchNorm2d(124)
+        self.batch5 = nn.BatchNorm2d(250)
         self.max = nn.MaxPool2d(2,2)
-        self.linear1 = nn.Linear(175*4*4,764)
+        self.linear1 = nn.Linear(250*4*4,764)
         #self.linear2 = nn.Linear(3064,1532)
         self.linear3 = nn.Linear(764,254)
         self.output = nn.Linear(254,14)
         self.dropout1 = nn.Dropout(p=0.2)
         self.dropout = nn.Dropout(p=0.5)
+        self.dropout_conv = nn.Dropout(p=0.3)
         
     def forward(self, t):
-        t = self.max(F.relu(self.con1(t)))
+        t = F.relu(self.con1(t))
         t = self.batch(t)
+
         t = self.max(F.relu(self.con2(t)))
         t = self.batch2(t)
+        t = self.dropout_conv(t)
+
         t = self.max(F.relu(self.con3(t)))
         t = self.batch3(t)
+
         t = self.max(F.relu(self.con4(t)))
         t = self.batch1(t)
+        t = self.dropout_conv(t)
+
+        t = self.max(F.relu(self.con5(t)))
+        t = self.batch5(t)
+        t = self.dropout_conv(t)
+
         t = t.view(t.shape[0],-1)
         t = self.dropout1(t)
         t = F.relu(self.linear1(t))
@@ -83,7 +96,7 @@ class Network(nn.Module):
         #t = F.relu(self.linear2(t))
         #t = self.dropout(t)
         t = F.relu(self.linear3(t))
-        t = F.dropout(t)
+        t = self.dropout(t)
         t = self.output(t)
         t = F.log_softmax(t,dim=1)
         return t
@@ -110,7 +123,7 @@ lossFunc = loss()
 #######              Metaparameters and training options              ######
 ############################################################################
 dataset = "./data"
-train_val_split = 0.8
+train_val_split = 0.98
 batch_size = 256
 epochs = 30
 optimiser = optim.Adam(net.parameters(), lr=0.001)
