@@ -62,6 +62,7 @@ class Network(nn.Module):
         self.batch1 = nn.BatchNorm2d(158) 
         self.batch3 = nn.BatchNorm2d(84)
         self.batch5 = nn.BatchNorm2d(192)
+        self.batch6 = nn.BatchNorm2d(234)
         self.max = nn.MaxPool2d(2,2)
         self.linear1 = nn.Linear(234*8*8,764)
         self.linear_batch1 = nn.BatchNorm1d(764)
@@ -82,16 +83,18 @@ class Network(nn.Module):
         t = self.batch3(t)
         t = self.dropout1(t)
         t = F.relu(self.con4(t))
+        t = self.batch1(t)
         t = self.max(F.relu(self.con5(t)))
         t = self.batch5(t)
         t = self.dropout1(t)
         t = F.relu(self.con6(t))
+        t = self.batch6(t) 
         t = t.view(t.shape[0],-1)
         t = self.dropout1(t)
         t = F.relu(self.linear1(t))
         t = self.dropout(t)
         t = F.relu(self.linear3(t))
-        t = F.dropout(t)
+        t = self.dropout(t)
         t = self.output(t)
         t = F.log_softmax(t,dim=1)
         return t
@@ -118,7 +121,7 @@ lossFunc = loss()
 #######              Metaparameters and training options              ######
 ############################################################################
 dataset = "./data"
-train_val_split = 0.8
+train_val_split = 0.92
 batch_size = 256
 epochs = 50
 optimiser = optim.Adam(net.parameters(), lr=0.001)
