@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 student.py
 
@@ -15,6 +16,10 @@ You are encouraged to modify these to improve the performance of your model.
 The variable device may be used to refer to the CPU/GPU being used by PyTorch.
 You may change this variable in the config.py file.
 
+alphazero comp9444 
+Kartikaye Chandhok (z5285022)
+Uzaif Sheikh (z5252826)
+g024898
 """
 import torch
 import torch.nn as nn
@@ -28,6 +33,37 @@ import torchvision.transforms as transforms
 
 Briefly describe how your program works, and explain any design and training
 decisions you made along the way.
+
+The Neural Network we designed consists of five convolutional layer with increasing output
+feature channels from each one starting from 3 channels to 52 in the first convolutional channel,
+52 to 96 channels in the second convolutional layer, 96 to 124 feature channels in the third convolutional layer,
+124 to 175 output features in the fourth convolutional layer and lastly 175 input features to 250 output features
+in the fifth convolutional layer. ReLu activation is used in each convolutional layer to sharpen the feature maps.
+We also apply batch normalization after each convolutional layer along with dropouts of 0.3 on the second,
+third and fourth convolutional layer to normalize and regularize the data to prevent overfitting and speed up the learning process.
+Kernel size is 3 x 3 for each layer and a padding of 1 is added so kernel is able to fit over the image properly.
+The images from each convolutional layer excluding the first one are also pooled down subsequently to a 4 x 4 image,
+this is done to reduce the image dimension size as we increase the number of feature maps and also to abstract more features
+from the convolutional layers.
+The fully linear layer consists of two hidden layer with 250 x 4 x 4 nodes in the input layer, 764 nodes in the first 
+hidden layer and 254 nodes in the secong hidden layer with Relu activation function in each node of the hidden layers.
+We use a dropout of 0.5 on the two hidden layers to help prevent overfitting.
+The output layer consists of 14 nodes for classifying the 14 characters and log_softmax function for multiclass
+classification.
+As we are using log softmax as our activation function in our output layer which classifies the images using predicted output probabilities,
+we chose Cross Entropy Loss function as our loss function which works well with softmax to minimize the loss between actual
+and predicted probabilities when working with muliclass classification.
+Optimizer used is Adam.
+The training and validation split was changed to 0.9 to provide more data for the trainig phase to prevent overfitting and
+the model was trained for 50 epochs. The learning rate and batch size remain unchanged. 
+
+We started our model with two convolutional layer and a fully connected linear layer with one hidden layer, the simplest 
+idea to see how our model performed. It achieved around 30% accuracy on the trainig phase and 25% in the validation set.
+We started making our model architecture more complicated and observed that adding more convolutional layers increased the
+training accuracy but validation set accuracy remained the same. We realized the model was overfitting, so we decided to 
+introduce some regularization methods like adding dropout layers and batch normalization, we set the batch normalization
+across all the convolutional layers and set the dropuout values to deafult, which seemed too much so we reduced it around 0.3
+and as our accuracy dropped
 
 """
 
@@ -123,7 +159,7 @@ lossFunc = loss()
 #######              Metaparameters and training options              ######
 ############################################################################
 dataset = "./data"
-train_val_split = 0.98
+train_val_split = 0.95
 batch_size = 256
-epochs = 30
+epochs = 40
 optimiser = optim.Adam(net.parameters(), lr=0.001)
