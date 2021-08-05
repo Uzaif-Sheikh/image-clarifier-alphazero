@@ -159,7 +159,7 @@ lossFunc = loss()
 #######              Metaparameters and training options              ######
 ############################################################################
 dataset = "./data"
-train_val_split = 0.95
+train_val_split = 0.9
 batch_size = 256
-epochs = 40
+epochs = 50
 optimiser = optim.Adam(net.parameters(), lr=0.001)
