@@ -1,4 +1,4 @@
-#Alphazero
+# Alphazero
 
 Group members:
 Uzaif Sheikh 
