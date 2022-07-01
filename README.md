@@ -1,4 +1,4 @@
-# COMP9444-Group-Ass2-alphazero
+#Alphazero
 
 Group members:
 Uzaif Sheikh 
