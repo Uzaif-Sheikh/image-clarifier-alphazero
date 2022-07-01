@@ -2,7 +2,6 @@
 
 """
 student.py
-UNSW COMP9444 Neural Networks and Deep Learning
 You may modify this file however you wish, including creating additional
 variables, functions, classes, etc., so long as your code runs with the
 hw2main.py file unmodified, and you are only using the approved packages.
