@@ -14,6 +14,24 @@ Kernel size is 3 x 3 for each layer and a padding of 1 is added so kernel is abl
 The images from each convolutional layer excluding the first one are also pooled down subsequently to a 4 x 4 image,
 this is done to reduce the image dimension size as we increase the number of feature maps and also to abstract more features
 from the convolutional layers.
+
+```python
+        # creating convolutional layer from 3 to 52 with kernel size 3 and padding 1. 
+        self.con1 = nn.Conv2d(3,52,3,padding=1)
+
+        # Conv layer of 52 to 96 with kernel size 3 and padding 1.
+        self.con2 = nn.Conv2d(52,96,3,padding=1)
+
+        # Conv layer of 96 to 124 with kernel size 3 and padding 1.
+        self.con3 = nn.Conv2d(96,124,3,padding=1)
+
+        # Conv layer of 124 to 175 with kernel size 3 and padding 1.
+        self.con4 = nn.Conv2d(124,175,3,padding =1)
+
+        # Conv layer of 175 to 250 wither kernel size 3 and padding 1.
+        self.con5 = nn.Conv2d(175, 250, 3, padding = 1)
+```
+
 The fully linear layer consists of two hidden layer with 250 x 4 x 4 nodes in the input layer, 764 nodes in the first 
 hidden layer and 254 nodes in the secong hidden layer with Relu activation function in each node of the hidden layers.
 We use a dropout of 0.5 on the two hidden layers to help prevent overfitting.
@@ -23,6 +41,33 @@ As we are using log softmax as our activation function in our output layer which
 we chose Cross Entropy Loss function as our loss function which works well with softmax to minimize the loss between actual
 and predicted probabilities when working with muliclass classification.
 Optimizer used is Adam.
+
+```python
+        # doing batch normlization for respective out features.
+        self.batch = nn.BatchNorm2d(52) 
+        self.batch2 = nn.BatchNorm2d(96)
+        self.batch1 = nn.BatchNorm2d(175) 
+        self.batch3 = nn.BatchNorm2d(124)
+        self.batch5 = nn.BatchNorm2d(250)
+
+        # creating max pooling layer of size 2 x 2.
+        self.max = nn.MaxPool2d(2,2)
+
+        # Creating linear layer from 250*4*4 to 764
+        self.linear1 = nn.Linear(250*4*4,764)
+
+        # Creating linear layer from 764 to 254
+        self.linear3 = nn.Linear(764,254)
+
+        # Creating output layer from 254 to 14
+        self.output = nn.Linear(254,14)
+
+        # Creating dropout layer of 0.2, 0.5 and 0.3
+        self.dropout1 = nn.Dropout(p=0.2)
+        self.dropout = nn.Dropout(p=0.5)
+        self.dropout_conv = nn.Dropout(p=0.3)
+```
+
 The training and validation split was changed to 0.9-0.95 to provide more data for the trainig phase to prevent overfitting and
 the model was trained for 40 epochs. The learning rate and batch size remain unchanged. 
 We started our model with two convolutional layer and a fully connected linear layer with one hidden layer, the simplest 
