@@ -35,5 +35,5 @@ applied max pooling to four convolutional layer rather than applying it to every
 image to 2 x 2 which leads in lower accuracy as the features of the image was not clear due to the lower pixel size. Lastly in 
 order to reduce overfitting we increased the training set from 0.8 to 0.90-0.95 and when we tried to change the optimizer from Adam 
 to SGD which lowered our accuracy, we decided to stick with Adam. The architecture described above is our final model and 
-our current accuracy is 98 on the training set and 90-93 on the validation set.
+our current accuracy is 98% on the training set and 90-93% on the validation set.
  
